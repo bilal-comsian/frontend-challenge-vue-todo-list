@@ -86,14 +86,28 @@ const deleteApiTask = async (id: number) => {
       <button @click="addApiTask">Add API Task</button>
     </div>
     <ul>
-      <li v-for="task in apiTodos" :key="task.id">
+      <li v-for="task in apiTodos" :key="task.id" class="api-task-item">
         <span>ID: {{ task.id }}</span>
         <span style="margin-left: 1em;">
           Name: {{ task.name }}
         </span>
-        <button style="margin-left: 1em;" @click="deleteApiTask(task.id)">Delete</button>
+        <span
+          class="delete-icon"
+          @click="deleteApiTask(task.id)"
+          title="Delete"
+          role="button"
+          tabindex="0"
+          @keydown.enter="deleteApiTask(task.id)"
+          aria-label="Delete task"
+          style="margin-left: 1em;"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="5" y1="5" x2="15" y2="15" stroke="#ff4d4f" stroke-width="2" stroke-linecap="round"/>
+            <line x1="15" y1="5" x2="5" y2="15" stroke="#ff4d4f" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
       </li>
     </ul>
-  </div>
+    </div>
 </template>
     
