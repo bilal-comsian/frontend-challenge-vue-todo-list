@@ -1,13 +1,8 @@
 <script setup lang="ts">
-// import { defineProps } from 'vue';
-
-type Todo = {
-  id: number;
-  text: string;
-};
+import type { Task } from '../types/task';
 
 const props = defineProps<{
-  todos: Todo[];
+  todos: Task[];
   onDelete: (id: number) => void;
 }>();
 </script>
