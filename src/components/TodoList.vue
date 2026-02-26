@@ -10,19 +10,18 @@ const fetchApiTodos = async () => {
     const res = await fetch('https://retoolapi.dev/xaoo5W/tasks');
     if (!res.ok) throw new Error('Failed to fetch');
     apiTodos.value = await res.json();
-    apiTodos.value.forEach(element => {
-      todos.value.push({ id: element.id , text: element.name });
-    });
-     
+         
   } catch (e) {
     apiTodos.value = [];
   }
 };
 
+
 onMounted(() => {
   fetchApiTodos();
 });
 const newTodo = ref('');
+const newApiTodo = ref('');
 
 const addTask = async () => {
   const trimmed = newTodo.value.trim();
@@ -32,6 +31,38 @@ const addTask = async () => {
 };
 const deleteTask = async (id: number) => {
   todos.value = todos.value.filter(todo => todo.id !== id);
+};
+// API Add Task
+const addApiTask = async () => {
+  const trimmed = newApiTodo.value.trim();
+  if (!trimmed) return;
+  try {
+    const res = await fetch('https://retoolapi.dev/xaoo5W/tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: trimmed }),
+    });
+    if (!res.ok) throw new Error('Failed to add task');
+    await fetchApiTodos();
+    newApiTodo.value = '';
+  } catch (e) {
+    // Optionally handle error
+  }
+};
+
+// API Delete Task
+const deleteApiTask = async (id: number) => {
+  try {
+    const res = await fetch(`https://retoolapi.dev/xaoo5W/tasks/${id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) throw new Error('Failed to delete task');
+    await fetchApiTodos();
+  } catch (e) {
+    // Optionally handle error
+  }
 };
 </script>
 
@@ -48,15 +79,21 @@ const deleteTask = async (id: number) => {
   </section>
   
 
-  <!-- <div style="margin-top:2rem">
+  <div style="margin-top:2rem">
     <h2>API Tasks</h2>
+    <div>
+      <input v-model="newApiTodo" type="text" placeholder="New API task" />
+      <button @click="addApiTask">Add API Task</button>
+    </div>
     <ul>
       <li v-for="task in apiTodos" :key="task.id">
         <span>ID: {{ task.id }}</span>
         <span style="margin-left: 1em;">
           Name: {{ task.name }}
         </span>
+        <button style="margin-left: 1em;" @click="deleteApiTask(task.id)">Delete</button>
       </li>
     </ul>
-  </div> -->
+  </div>
 </template>
+    
